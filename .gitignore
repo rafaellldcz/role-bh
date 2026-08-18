@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Tests and coverage
+coverage/
+playwright-report/
+test-results/
+
+# Builds
+.next/
+out/
+dist/
+build/
+.vercel/
+
+# Expo and React Native
+.expo/
+.expo-shared/
+android/
+ios/
+*.jks
+*.keystore
+*.mobileprovision
+*.p12
+
+# Editors
+.vscode/
+.idea/
+
+# Operating systems
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
