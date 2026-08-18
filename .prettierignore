@@ -1,0 +1,13 @@
+.git/
+node_modules/
+.pnpm-store/
+**/.next/
+**/out/
+**/dist/
+**/build/
+**/coverage/
+**/.expo/
+**/android/
+**/ios/
+pnpm-lock.yaml
+pnpm-workspace.yaml

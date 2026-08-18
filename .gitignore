@@ -35,6 +35,11 @@ ios/
 *.keystore
 *.mobileprovision
 *.p12
+*.pfx
+*.pem
+*.key
+credentials.local.json
+service-account*.json
 
 # Editors
 .vscode/
