@@ -11,7 +11,7 @@ tecnologias reservadas para etapas futuras.
 | pnpm                     | 11.22.0 | Gerenciador de pacotes e workspaces                        |
 | TypeScript               | 6.0.3   | Verificação estrita das ferramentas Node                   |
 | `@types/node`            | 26.2.0  | Tipos do ambiente Node                                     |
-| ESLint                   | 10.8.1  | Análise estática com Flat Config                           |
+| ESLint da raiz           | 10.8.1  | Análise estática da fundação com Flat Config               |
 | `@eslint/js`             | 10.0.1  | Regras recomendadas para JavaScript                        |
 | `typescript-eslint`      | 8.67.0  | Regras e parser TypeScript, incluindo análise com tipos    |
 | `globals`                | 17.11.0 | Globais do Node para lint                                  |
@@ -20,6 +20,24 @@ tecnologias reservadas para etapas futuras.
 | Git                      | —       | Histórico e controle de versão                             |
 | GitHub                   | —       | Repositório remoto privado                                 |
 | Verificador de segredos  | local   | Varredura inicial baseada em padrões, implementada em Node |
+
+### Landing instalada
+
+| Tecnologia             | Versão  | Função atual                                   |
+| ---------------------- | ------- | ---------------------------------------------- |
+| Next.js                | 16.3.1  | App Router, servidor local e build de produção |
+| React                  | 19.2.8  | Renderização da interface                      |
+| React DOM              | 19.2.8  | Integração do React com o DOM                  |
+| Tailwind CSS           | 4.3.3   | Classes utilitárias da página mínima           |
+| `@tailwindcss/postcss` | 4.3.3   | Integração do Tailwind com PostCSS             |
+| PostCSS                | 8.5.26  | Processamento do CSS                           |
+| ESLint da landing      | 9.39.5  | Execução compatível com os plugins do Next.js  |
+| `eslint-config-next`   | 16.3.1  | Regras Next.js, React, hooks e TypeScript      |
+| `@types/react`         | 19.2.18 | Tipos do React para TypeScript                 |
+| `@types/react-dom`     | 19.2.4  | Tipos do React DOM para TypeScript             |
+
+A landing também declara TypeScript `6.0.3` e `@types/node` `26.2.0`, alinhados com a raiz.
+As declarações permanecem no pacote para respeitar o isolamento de dependências do pnpm.
 
 As versões de dependências são exatas no `package.json` e no `pnpm-lock.yaml`.
 
@@ -36,6 +54,10 @@ As versões de dependências são exatas no `package.json` e no `pnpm-lock.yaml`
 - **Git e GitHub:** mantêm o histórico local e seu espelho privado em `origin/main`.
 - **Verificador de segredos:** reduz o risco de versionar alguns formatos sensíveis, sem substituir
   scanner dedicado.
+- **Next.js e React:** fornecem somente a rota estática `/` pelo App Router; não há backend ou API
+  Route.
+- **Tailwind CSS e PostCSS:** comprovam o pipeline de estilos sem estabelecer identidade visual
+  definitiva.
 
 ## Ferramentas externas validadas no ambiente
 
@@ -70,15 +92,14 @@ definida neste repositório:
 
 | Área            | Tecnologias planejadas                          |
 | --------------- | ----------------------------------------------- |
-| Landing         | Next.js, React e Tailwind CSS                   |
 | Mobile          | Expo, React Native e Expo Router                |
 | Backend e dados | Supabase, autenticação, banco, storage e RLS    |
 | Automação       | GitHub Actions e proteção da branch principal   |
 | Testes          | Testes unitários, integração, E2E web e Maestro |
 | Entrega         | Deploy da landing, EAS Build e builds mobile    |
 
-Nenhuma dessas tecnologias deve aparecer em comandos de instalação ou execução até que a etapa
-correspondente autorize sua adoção e fixe versões compatíveis.
+Nenhuma dessas tecnologias planejadas deve aparecer em comandos de instalação ou execução até que
+a etapa correspondente autorize sua adoção e fixe versões compatíveis.
 
 Também não fazem parte do estado atual Turborepo, Nx, Changesets, Playwright, k6 ou um scanner
 avançado de segurança.

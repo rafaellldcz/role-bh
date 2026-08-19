@@ -3,8 +3,8 @@
 ## Projeto
 
 O Rolê BH é um produto digital em construção para o contexto de lazer e experiências em Belo
-Horizonte. A direção aprovada do MVP prevê uma landing page e uma aplicação mobile, mas nenhuma
-aplicação ou funcionalidade de produto existe no repositório atualmente.
+Horizonte. O repositório possui o bootstrap técnico da landing page; a aplicação mobile e as
+funcionalidades comerciais ainda não existem.
 
 O estado do repositório e esta documentação são a fonte da verdade técnica. O Plano Mestre e as
 instruções fornecidas pelo ChatGPT Work definem produto, etapas, escopo e critérios de aceite.
@@ -12,9 +12,10 @@ instruções fornecidas pelo ChatGPT Work definem produto, etapas, escopo e crit
 ## Estado e estrutura atuais
 
 - Monorepo pnpm com workspaces em `apps/*` e `packages/*`.
-- `apps/` e `packages/` contêm somente arquivos `.gitkeep`.
+- `apps/landing` contém Next.js com App Router, TypeScript e Tailwind CSS.
+- `packages/` contém somente `.gitkeep`.
 - A raiz concentra configurações de TypeScript, ESLint, Prettier e o verificador de segredos.
-- Não existem landing, mobile, backend, Supabase, CI, testes de produto ou deploy.
+- Não existem mobile, backend, Supabase, CI, testes de produto ou deploy.
 
 Leia, nesta ordem:
 
@@ -35,11 +36,22 @@ Comandos existentes no `package.json`:
   `pnpm check:secrets` e `pnpm check`.
 - Modificação: `pnpm format` e `pnpm lint:fix`.
 
+Scripts internos da landing:
+
+- `pnpm --filter @rolebh/landing dev`
+- `pnpm --filter @rolebh/landing build`
+- `pnpm --filter @rolebh/landing start`
+- `pnpm --filter @rolebh/landing lint`
+- `pnpm --filter @rolebh/landing typecheck`
+
 Antes de encerrar uma tarefa, execute os gates aplicáveis. O mínimo atual para mudanças no
 repositório é:
 
 ```powershell
 pnpm check
+pnpm --filter @rolebh/landing lint
+pnpm --filter @rolebh/landing typecheck
+pnpm --filter @rolebh/landing build
 git diff --check
 ```
 
@@ -54,6 +66,8 @@ Consulte [docs/QUALITY_GATES.md](docs/QUALITY_GATES.md) para o fluxo completo.
 - `eslint.config.mjs`: análise estática com zero warnings.
 - `.prettierrc.json` e `.prettierignore`: formatação.
 - `.gitignore` e `scripts/check-secrets.mjs`: proteção inicial contra material sensível.
+- `apps/landing/package.json`: dependências e scripts exclusivos da landing.
+- `apps/landing/src/app/`: layout global, estilos Tailwind e rota `/`.
 - `docs/`: arquitetura, segurança, stack e gates vigentes.
 
 ## Regras de execução

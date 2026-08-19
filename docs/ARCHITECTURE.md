@@ -4,12 +4,18 @@
 
 O Rolê BH é um monorepo pnpm com uma raiz compartilhada. O arquivo
 `pnpm-workspace.yaml` reconhece projetos diretamente abaixo de `apps/*` e `packages/*`.
-Atualmente, os dois diretórios contêm somente `.gitkeep`: não há aplicação nem pacote real.
+`apps/landing` é a primeira aplicação real; `packages/` ainda contém somente `.gitkeep`.
 
 ```text
 RoleBH/
 ├── apps/
-│   └── .gitkeep
+│   └── landing/
+│       ├── src/app/
+│       ├── eslint.config.mjs
+│       ├── next.config.ts
+│       ├── package.json
+│       ├── postcss.config.mjs
+│       └── tsconfig.json
 ├── packages/
 │   └── .gitkeep
 ├── docs/
@@ -21,7 +27,7 @@ RoleBH/
 ```
 
 Não há orquestrador adicional de monorepo. A raiz fornece um único lockfile, scripts operacionais
-e configurações de qualidade.
+e configurações de qualidade. Não existe lockfile interno na landing.
 
 ## TypeScript em duas camadas
 
@@ -34,7 +40,8 @@ e configurações de qualidade.
 - ausência de emissão de JavaScript;
 - `skipLibCheck` para bibliotecas.
 
-Futuras aplicações podem estender essa base e declarar suas próprias opções de plataforma.
+A landing estende essa base e declara somente as opções necessárias ao Next.js. Futuras
+aplicações também devem estender a base e declarar suas opções de plataforma.
 
 ### Ferramentas da raiz
 
@@ -46,36 +53,47 @@ Futuras aplicações podem estender essa base e declarar suas próprias opções
 - tipos do Node;
 - inclusão restrita a `eslint.config.mjs` e `scripts/**/*.mjs`.
 
-Esse arquivo não é uma configuração pronta para web ou React Native. Aplicações futuras devem
-estender `tsconfig.base.json`, em vez de herdar opções Node incompatíveis.
+Esse arquivo não é uma configuração pronta para web ou React Native. A landing estende diretamente
+`tsconfig.base.json`, não o `tsconfig.json` Node da raiz.
 
 ## Responsabilidades da raiz
 
-| Arquivo ou diretório        | Responsabilidade vigente                                |
-| --------------------------- | ------------------------------------------------------- |
-| `package.json`              | Metadados, versões, scripts e dependências da fundação  |
-| `pnpm-lock.yaml`            | Resolução reproduzível das dependências atuais          |
-| `pnpm-workspace.yaml`       | Descoberta de aplicações e pacotes de primeiro nível    |
-| `tsconfig.base.json`        | Regras TypeScript compartilháveis                       |
-| `tsconfig.json`             | Typecheck das ferramentas Node da raiz                  |
-| `eslint.config.mjs`         | ESLint Flat Config para JavaScript e TypeScript         |
-| `.prettierrc.json`          | Estilo de formatação                                    |
-| `.prettierignore`           | Saídas e artefatos excluídos do Prettier                |
-| `.gitignore`                | Dependências, segredos locais, builds e arquivos locais |
-| `scripts/check-secrets.mjs` | Verificação inicial de material sensível                |
-| `apps/`                     | Espaço reservado para aplicações, ainda vazio           |
-| `packages/`                 | Espaço reservado para código compartilhado, ainda vazio |
+| Arquivo ou diretório             | Responsabilidade vigente                                |
+| -------------------------------- | ------------------------------------------------------- |
+| `package.json`                   | Metadados, versões, scripts e dependências da fundação  |
+| `pnpm-lock.yaml`                 | Resolução reproduzível das dependências atuais          |
+| `pnpm-workspace.yaml`            | Descoberta de aplicações e pacotes de primeiro nível    |
+| `tsconfig.base.json`             | Regras TypeScript compartilháveis                       |
+| `tsconfig.json`                  | Typecheck das ferramentas Node da raiz                  |
+| `eslint.config.mjs`              | ESLint Flat Config para JavaScript e TypeScript         |
+| `.prettierrc.json`               | Estilo de formatação                                    |
+| `.prettierignore`                | Saídas e artefatos excluídos do Prettier                |
+| `.gitignore`                     | Dependências, segredos locais, builds e arquivos locais |
+| `scripts/check-secrets.mjs`      | Verificação inicial de material sensível                |
+| `apps/landing/package.json`      | Dependências e scripts internos da aplicação            |
+| `apps/landing/src/app/`          | App Router, layout, estilo global e rota `/`            |
+| `apps/landing/tsconfig.json`     | TypeScript web estendendo a base compartilhada          |
+| `apps/landing/eslint.config.mjs` | Regras oficiais Next.js, React e TypeScript             |
+| `packages/`                      | Espaço reservado para código compartilhado, ainda vazio |
 
-## Direção aprovada — ainda não implementada
+## Aplicação landing vigente
+
+A landing usa Next.js com App Router e código sob `src/`. A rota `/` é uma página estática
+mínima, sem API Routes, fontes remotas, backend ou conteúdo comercial. Tailwind CSS é processado
+pelo plugin oficial de PostCSS.
+
+Os scripts `dev`, `build`, `start`, `lint` e `typecheck` pertencem ao workspace
+`@rolebh/landing`. Atalhos agregados na raiz ainda não existem.
+
+## Direção aprovada — parcialmente implementada
 
 A direção arquitetural aprovada separa:
 
-- uma landing page em `apps/landing`;
 - uma aplicação mobile em `apps/mobile`;
 - pacotes reutilizáveis em `packages/*`, somente quando surgir compartilhamento real.
 
-Essa estrutura é planejamento, não estado atual. Os diretórios `apps/landing` e `apps/mobile`
-não existem e nenhuma dependência de aplicação foi instalada.
+A landing já existe como bootstrap técnico. `apps/mobile` e pacotes compartilhados reais ainda
+não existem.
 
 Código potencialmente compartilhável inclui:
 
@@ -106,11 +124,11 @@ documentação divergir do código, reporte a divergência antes de decidir uma 
 
 Ainda não existem:
 
-- landing, aplicação mobile ou pacote compartilhado real;
-- componentes de interface, rotas ou navegação;
+- aplicação mobile ou pacote compartilhado real;
+- componentes reutilizáveis, navegação ou rotas além de `/`;
 - API, backend, autenticação, banco, storage ou Supabase;
 - schema, migrações, Edge Functions ou políticas RLS;
-- testes de produto ou configuração de build;
+- testes de produto;
 - CI, workflows, proteção de branch ou deploy;
 - diretórios nativos Android/iOS pertencentes ao produto.
 

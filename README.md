@@ -4,17 +4,20 @@ O Rolê BH é um produto digital em construção para o contexto de lazer e expe
 Horizonte. A direção aprovada do MVP prevê uma presença web inicial e uma experiência mobile,
 desenvolvidas em etapas independentes sobre uma base compartilhada.
 
-Este repositório contém apenas a fundação técnica do monorepo. Ainda não existem landing page,
-aplicação mobile, backend, autenticação, banco de dados ou infraestrutura de deploy.
+Este repositório contém a fundação técnica do monorepo e o bootstrap da landing page. A landing
+renderiza uma página mínima para validar Next.js, React, TypeScript e Tailwind CSS; ainda não é uma
+landing comercial.
 
 ## Estado atual
 
 - Monorepo pnpm inicializado e sincronizado com um repositório privado no GitHub.
+- Landing técnica em `apps/landing`, com App Router e rota `/`.
 - Node.js e pnpm fixados para o projeto.
 - TypeScript estrito, ESLint, Prettier e proteção inicial contra segredos configurados.
-- `apps/` e `packages/` são placeholders vazios.
-- Nenhum código ou teste de produto foi criado.
+- `packages/` permanece como placeholder vazio.
+- Nenhum teste de produto foi criado.
 - Não existem CI, proteção de branch, Supabase ou deploy.
+- Mobile, backend, autenticação e banco de dados ainda não existem.
 
 ## Requisitos locais
 
@@ -43,7 +46,8 @@ scripts de ciclo de vida:
 pnpm install --frozen-lockfile --ignore-scripts
 ```
 
-Esse comando instala somente a fundação de qualidade já declarada. Não há aplicação para iniciar.
+Esse comando instala a fundação de qualidade e as dependências da landing sem executar scripts de
+ciclo de vida.
 
 ## Comandos disponíveis
 
@@ -60,11 +64,30 @@ Esse comando instala somente a fundação de qualidade já declarada. Não há a
 Os comandos modificadores devem ser usados somente dentro do escopo autorizado. Veja a composição
 dos gates e suas limitações em [docs/QUALITY_GATES.md](docs/QUALITY_GATES.md).
 
+### Landing
+
+| Comando                                   | Finalidade                           |
+| ----------------------------------------- | ------------------------------------ |
+| `pnpm --filter @rolebh/landing dev`       | Inicia o servidor de desenvolvimento |
+| `pnpm --filter @rolebh/landing build`     | Cria o build de produção             |
+| `pnpm --filter @rolebh/landing start`     | Executa um build já criado           |
+| `pnpm --filter @rolebh/landing lint`      | Executa o ESLint com zero warnings   |
+| `pnpm --filter @rolebh/landing typecheck` | Executa TypeScript sem emissão       |
+
+Para executar localmente:
+
+```powershell
+pnpm --filter @rolebh/landing dev
+```
+
+Abra `http://localhost:3000`. Não existe atalho na raiz para esse comando.
+
 ## Estrutura
 
 ```text
 RoleBH/
-├── apps/                       # placeholder para aplicações
+├── apps/
+│   └── landing/               # bootstrap técnico Next.js
 ├── packages/                   # placeholder para código compartilhado
 ├── docs/                       # documentação operacional
 ├── scripts/
@@ -88,8 +111,9 @@ responsabilidades estão em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 3. Execute o frozen install quando precisar restaurar dependências.
 4. Faça apenas a alteração autorizada.
 5. Use comandos modificadores somente sobre arquivos no escopo.
-6. Execute `pnpm check` e `git diff --check`.
-7. Revise o diff, os arquivos alterados e o estado do Git antes de encerrar.
+6. Para mudanças na landing, execute lint, typecheck e build do workspace.
+7. Execute `pnpm check` e `git diff --check`.
+8. Revise o diff, os arquivos alterados e o estado do Git antes de encerrar.
 
 ## Documentação
 
@@ -101,10 +125,11 @@ responsabilidades estão em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Limitações conhecidas
 
-- Landing, mobile e backend ainda não existem; portanto não há comando de execução ou build.
+- A landing contém somente o bootstrap técnico; não há conteúdo comercial, formulário ou imagens.
+- Mobile e backend ainda não existem.
 - Não existem testes automatizados de produto nem CI remoto.
 - A proteção contra segredos é local, baseada em poucos padrões de alta confiança e não substitui
   um scanner dedicado.
-- O Android Toolchain foi validado fora do repositório, mas ainda não existe projeto Android.
+- O Android Toolchain foi validado fora do repositório, mas ainda não existe projeto mobile.
 - O fluxo em iPhone físico não foi validado e depende futuramente de projeto compatível e rede
   privada confiável.
