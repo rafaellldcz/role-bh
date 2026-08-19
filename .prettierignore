@@ -8,6 +8,7 @@ node_modules/
 **/build/
 **/coverage/
 **/.expo/
+**/expo-env.d.ts
 **/android/
 **/ios/
 pnpm-lock.yaml

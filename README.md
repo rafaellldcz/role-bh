@@ -4,20 +4,21 @@ O Rolê BH é um produto digital em construção para o contexto de lazer e expe
 Horizonte. A direção aprovada do MVP prevê uma presença web inicial e uma experiência mobile,
 desenvolvidas em etapas independentes sobre uma base compartilhada.
 
-Este repositório contém a fundação técnica do monorepo e o bootstrap da landing page. A landing
-renderiza uma página mínima para validar Next.js, React, TypeScript e Tailwind CSS; ainda não é uma
-landing comercial.
+Este repositório contém a fundação técnica do monorepo e os bootstraps da landing page e da
+aplicação mobile. As duas aplicações renderizam telas mínimas para validar suas stacks; ainda não
+implementam funcionalidades comerciais.
 
 ## Estado atual
 
 - Monorepo pnpm inicializado e sincronizado com um repositório privado no GitHub.
 - Landing técnica em `apps/landing`, com App Router e rota `/`.
+- Aplicação técnica em `apps/mobile`, com Expo SDK 57, React Native e rota inicial do Expo Router.
 - Node.js e pnpm fixados para o projeto.
 - TypeScript estrito, ESLint, Prettier e proteção inicial contra segredos configurados.
 - `packages/` permanece como placeholder vazio.
 - Nenhum teste de produto foi criado.
 - Não existem CI, proteção de branch, Supabase ou deploy.
-- Mobile, backend, autenticação e banco de dados ainda não existem.
+- Backend, autenticação e banco de dados ainda não existem.
 
 ## Requisitos locais
 
@@ -46,8 +47,8 @@ scripts de ciclo de vida:
 pnpm install --frozen-lockfile --ignore-scripts
 ```
 
-Esse comando instala a fundação de qualidade e as dependências da landing sem executar scripts de
-ciclo de vida.
+Esse comando restaura os três projetos com manifesto (`RoleBH`, `@rolebh/landing` e
+`@rolebh/mobile`) pelo lockfile único, sem executar scripts de ciclo de vida.
 
 ## Comandos disponíveis
 
@@ -82,12 +83,34 @@ pnpm --filter @rolebh/landing dev
 
 Abra `http://localhost:3000`. Não existe atalho na raiz para esse comando.
 
+### Mobile
+
+| Comando                                                  | Finalidade                                |
+| -------------------------------------------------------- | ----------------------------------------- |
+| `pnpm --filter @rolebh/mobile start`                     | Inicia o servidor de desenvolvimento Expo |
+| `pnpm --filter @rolebh/mobile android`                   | Abre o projeto no Android                 |
+| `pnpm --filter @rolebh/mobile lint`                      | Executa o ESLint com zero warnings        |
+| `pnpm --filter @rolebh/mobile typecheck`                 | Executa TypeScript sem emissão            |
+| `pnpm --filter @rolebh/mobile exec expo install --check` | Valida versões compatíveis com o Expo     |
+| `pnpm dlx expo-doctor@1.20.2 .` em `apps/mobile`         | Executa o diagnóstico oficial fixado      |
+
+Para iniciar no AVD Android configurado:
+
+```powershell
+pnpm --filter @rolebh/mobile android
+```
+
+A rota inicial exibe `Rolê BH — Mobile funcionando.`. O bootstrap foi validado no AVD
+`RoleBH_API_36`, API 36 e `x86_64`, incluindo Fast Refresh. O iPhone físico não foi validado com
+SDK 57 nesta etapa.
+
 ## Estrutura
 
 ```text
 RoleBH/
 ├── apps/
-│   └── landing/               # bootstrap técnico Next.js
+│   ├── landing/               # bootstrap técnico Next.js
+│   └── mobile/                # bootstrap técnico Expo/React Native
 ├── packages/                   # placeholder para código compartilhado
 ├── docs/                       # documentação operacional
 ├── scripts/
@@ -111,9 +134,10 @@ responsabilidades estão em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 3. Execute o frozen install quando precisar restaurar dependências.
 4. Faça apenas a alteração autorizada.
 5. Use comandos modificadores somente sobre arquivos no escopo.
-6. Para mudanças na landing, execute lint, typecheck e build do workspace.
-7. Execute `pnpm check` e `git diff --check`.
-8. Revise o diff, os arquivos alterados e o estado do Git antes de encerrar.
+6. Execute os gates específicos do workspace alterado.
+7. No mobile, execute lint, typecheck, `expo install --check` e Expo Doctor.
+8. Execute `pnpm check` e `git diff --check`.
+9. Revise o diff, os arquivos alterados e o estado do Git antes de encerrar.
 
 ## Documentação
 
@@ -126,10 +150,9 @@ responsabilidades estão em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 ## Limitações conhecidas
 
 - A landing contém somente o bootstrap técnico; não há conteúdo comercial, formulário ou imagens.
-- Mobile e backend ainda não existem.
+- O mobile contém somente o bootstrap técnico; não há fluxo de produto, dados ou integração.
 - Não existem testes automatizados de produto nem CI remoto.
 - A proteção contra segredos é local, baseada em poucos padrões de alta confiança e não substitui
   um scanner dedicado.
-- O Android Toolchain foi validado fora do repositório, mas ainda não existe projeto mobile.
-- O fluxo em iPhone físico não foi validado e depende futuramente de projeto compatível e rede
-  privada confiável.
+- O Android foi validado com Expo Go no AVD local; não existem diretórios nativos versionados.
+- O fluxo em iPhone físico com Expo SDK 57 não foi validado e permanece um bloqueio externo.

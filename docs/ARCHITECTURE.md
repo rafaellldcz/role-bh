@@ -4,17 +4,24 @@
 
 O Rolê BH é um monorepo pnpm com uma raiz compartilhada. O arquivo
 `pnpm-workspace.yaml` reconhece projetos diretamente abaixo de `apps/*` e `packages/*`.
-`apps/landing` é a primeira aplicação real; `packages/` ainda contém somente `.gitkeep`.
+`apps/landing` e `apps/mobile` são as aplicações vigentes; `packages/` ainda contém somente
+`.gitkeep`.
 
 ```text
 RoleBH/
 ├── apps/
-│   └── landing/
+│   ├── landing/
+│   │   ├── src/app/
+│   │   ├── eslint.config.mjs
+│   │   ├── next.config.ts
+│   │   ├── package.json
+│   │   ├── postcss.config.mjs
+│   │   └── tsconfig.json
+│   └── mobile/
 │       ├── src/app/
+│       ├── app.json
 │       ├── eslint.config.mjs
-│       ├── next.config.ts
 │       ├── package.json
-│       ├── postcss.config.mjs
 │       └── tsconfig.json
 ├── packages/
 │   └── .gitkeep
@@ -27,7 +34,7 @@ RoleBH/
 ```
 
 Não há orquestrador adicional de monorepo. A raiz fornece um único lockfile, scripts operacionais
-e configurações de qualidade. Não existe lockfile interno na landing.
+e configurações de qualidade. Não existe lockfile interno nas aplicações.
 
 ## TypeScript em duas camadas
 
@@ -40,8 +47,8 @@ e configurações de qualidade. Não existe lockfile interno na landing.
 - ausência de emissão de JavaScript;
 - `skipLibCheck` para bibliotecas.
 
-A landing estende essa base e declara somente as opções necessárias ao Next.js. Futuras
-aplicações também devem estender a base e declarar suas opções de plataforma.
+A landing estende essa base e declara somente as opções necessárias ao Next.js. O mobile combina
+`expo/tsconfig.base` com a base compartilhada da raiz e declara somente inclusões da plataforma.
 
 ### Ferramentas da raiz
 
@@ -54,7 +61,8 @@ aplicações também devem estender a base e declarar suas opções de plataform
 - inclusão restrita a `eslint.config.mjs` e `scripts/**/*.mjs`.
 
 Esse arquivo não é uma configuração pronta para web ou React Native. A landing estende diretamente
-`tsconfig.base.json`, não o `tsconfig.json` Node da raiz.
+`tsconfig.base.json`, e o mobile estende `expo/tsconfig.base` e `tsconfig.base.json`; nenhuma
+aplicação estende o `tsconfig.json` Node da raiz.
 
 ## Responsabilidades da raiz
 
@@ -74,6 +82,11 @@ Esse arquivo não é uma configuração pronta para web ou React Native. A landi
 | `apps/landing/src/app/`          | App Router, layout, estilo global e rota `/`            |
 | `apps/landing/tsconfig.json`     | TypeScript web estendendo a base compartilhada          |
 | `apps/landing/eslint.config.mjs` | Regras oficiais Next.js, React e TypeScript             |
+| `apps/mobile/package.json`       | Expo, React Native, Expo Router e scripts internos      |
+| `apps/mobile/src/app/`           | Layout e rota inicial pelo Expo Router                  |
+| `apps/mobile/app.json`           | Metadados, scheme e plugin do Expo Router               |
+| `apps/mobile/tsconfig.json`      | TypeScript Expo estendendo as duas bases                |
+| `apps/mobile/eslint.config.mjs`  | Flat Config oficial do Expo com zero warnings           |
 | `packages/`                      | Espaço reservado para código compartilhado, ainda vazio |
 
 ## Aplicação landing vigente
@@ -85,6 +98,16 @@ pelo plugin oficial de PostCSS.
 Os scripts `dev`, `build`, `start`, `lint` e `typecheck` pertencem ao workspace
 `@rolebh/landing`. Atalhos agregados na raiz ainda não existem.
 
+## Aplicação mobile vigente
+
+O mobile usa Expo SDK 57, React Native e Expo Router com código sob `src/`. A rota inicial é uma
+tela mínima protegida por `SafeAreaView`, sem navegação de produto, dados ou integração externa.
+O `scheme` `rolebh` atende ao requisito de linking em builds futuros.
+
+Os scripts `start`, `android`, `lint` e `typecheck` pertencem ao workspace `@rolebh/mobile`.
+Autolinking e Metro usam o suporte nativo a monorepos do Expo; não há configuração Metro própria.
+Também não existem diretórios `android/` ou `ios/`, prebuild, EAS ou Development Build.
+
 ## Direção aprovada — parcialmente implementada
 
 A direção arquitetural aprovada separa:
@@ -92,8 +115,8 @@ A direção arquitetural aprovada separa:
 - uma aplicação mobile em `apps/mobile`;
 - pacotes reutilizáveis em `packages/*`, somente quando surgir compartilhamento real.
 
-A landing já existe como bootstrap técnico. `apps/mobile` e pacotes compartilhados reais ainda
-não existem.
+Landing e mobile já existem como bootstraps técnicos. Pacotes compartilhados reais ainda não
+existem.
 
 Código potencialmente compartilhável inclui:
 
@@ -124,12 +147,13 @@ documentação divergir do código, reporte a divergência antes de decidir uma 
 
 Ainda não existem:
 
-- aplicação mobile ou pacote compartilhado real;
-- componentes reutilizáveis, navegação ou rotas além de `/`;
+- pacote compartilhado real;
+- componentes reutilizáveis, navegação de produto ou rotas além das telas mínimas;
 - API, backend, autenticação, banco, storage ou Supabase;
 - schema, migrações, Edge Functions ou políticas RLS;
 - testes de produto;
 - CI, workflows, proteção de branch ou deploy;
 - diretórios nativos Android/iOS pertencentes ao produto.
 
-O Android SDK e o AVD validados pertencem ao ambiente local, não à arquitetura versionada.
+O Android SDK, o AVD e o Expo Go usados na validação pertencem ao ambiente local, não à
+arquitetura versionada.

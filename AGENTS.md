@@ -3,7 +3,7 @@
 ## Projeto
 
 O Rolê BH é um produto digital em construção para o contexto de lazer e experiências em Belo
-Horizonte. O repositório possui o bootstrap técnico da landing page; a aplicação mobile e as
+Horizonte. O repositório possui os bootstraps técnicos da landing page e da aplicação mobile; as
 funcionalidades comerciais ainda não existem.
 
 O estado do repositório e esta documentação são a fonte da verdade técnica. O Plano Mestre e as
@@ -13,9 +13,10 @@ instruções fornecidas pelo ChatGPT Work definem produto, etapas, escopo e crit
 
 - Monorepo pnpm com workspaces em `apps/*` e `packages/*`.
 - `apps/landing` contém Next.js com App Router, TypeScript e Tailwind CSS.
+- `apps/mobile` contém Expo SDK 57, React Native, Expo Router e TypeScript.
 - `packages/` contém somente `.gitkeep`.
 - A raiz concentra configurações de TypeScript, ESLint, Prettier e o verificador de segredos.
-- Não existem mobile, backend, Supabase, CI, testes de produto ou deploy.
+- Não existem backend, Supabase, CI, testes de produto ou deploy.
 
 Leia, nesta ordem:
 
@@ -44,16 +45,23 @@ Scripts internos da landing:
 - `pnpm --filter @rolebh/landing lint`
 - `pnpm --filter @rolebh/landing typecheck`
 
+Scripts internos do mobile:
+
+- `pnpm --filter @rolebh/mobile start`
+- `pnpm --filter @rolebh/mobile android`
+- `pnpm --filter @rolebh/mobile lint`
+- `pnpm --filter @rolebh/mobile typecheck`
+
 Antes de encerrar uma tarefa, execute os gates aplicáveis. O mínimo atual para mudanças no
 repositório é:
 
 ```powershell
 pnpm check
-pnpm --filter @rolebh/landing lint
-pnpm --filter @rolebh/landing typecheck
-pnpm --filter @rolebh/landing build
 git diff --check
 ```
+
+Para mudanças na landing, acrescente lint, typecheck e build de `@rolebh/landing`. Para mudanças
+no mobile, acrescente lint, typecheck, `expo install --check` e Expo Doctor de `@rolebh/mobile`.
 
 Consulte [docs/QUALITY_GATES.md](docs/QUALITY_GATES.md) para o fluxo completo.
 
@@ -68,6 +76,9 @@ Consulte [docs/QUALITY_GATES.md](docs/QUALITY_GATES.md) para o fluxo completo.
 - `.gitignore` e `scripts/check-secrets.mjs`: proteção inicial contra material sensível.
 - `apps/landing/package.json`: dependências e scripts exclusivos da landing.
 - `apps/landing/src/app/`: layout global, estilos Tailwind e rota `/`.
+- `apps/mobile/package.json`: dependências e scripts exclusivos do mobile.
+- `apps/mobile/src/app/`: layout do Expo Router e rota inicial mobile.
+- `apps/mobile/app.json`: metadados e configurações do Expo.
 - `docs/`: arquitetura, segurança, stack e gates vigentes.
 
 ## Regras de execução
