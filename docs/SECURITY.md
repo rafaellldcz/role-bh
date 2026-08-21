@@ -53,7 +53,7 @@ um segredo inserido em arquivo permitido.
 - ignora extensões binárias conhecidas, arquivos maiores que 1 MiB e conteúdo provavelmente
   binário;
 - limita a saída recebida do Git a 16 MiB;
-- possui self-test executável com `pnpm check:secrets -- --self-test`.
+- possui self-test executável com `pnpm check:secrets --self-test`.
 
 Limitações relevantes:
 

@@ -47,7 +47,7 @@ jobs:
         run: pnpm check
 
       - name: Run secrets self-test
-        run: pnpm check:secrets -- --self-test
+        run: pnpm check:secrets --self-test
 
       - name: Confirm repository integrity
         run: |

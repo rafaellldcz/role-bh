@@ -114,7 +114,7 @@ pelo Git. A cobertura é deliberadamente limitada; consulte [SECURITY.md](SECURI
 O self-test do verificador pode ser executado sem exibir os materiais de teste:
 
 ```powershell
-pnpm check:secrets -- --self-test
+pnpm check:secrets --self-test
 ```
 
 Ele complementa o gate normal, mas não é executado por `pnpm check`.
@@ -127,7 +127,7 @@ Ele complementa o gate normal, mas não é executado por `pnpm check`.
 
 ```powershell
 pnpm check
-pnpm check:secrets -- --self-test
+pnpm check:secrets --self-test
 git diff --check
 ```
 
