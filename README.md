@@ -4,9 +4,9 @@ O Rolê BH é um produto digital em construção para o contexto de lazer e expe
 Horizonte. A direção aprovada do MVP prevê uma presença web inicial e uma experiência mobile,
 desenvolvidas em etapas independentes sobre uma base compartilhada.
 
-Este repositório contém a fundação técnica do monorepo e os bootstraps da landing page e da
-aplicação mobile. As duas aplicações renderizam telas mínimas para validar suas stacks; ainda não
-implementam funcionalidades comerciais.
+Este repositório contém a fundação técnica do monorepo, os bootstraps da landing page e da
+aplicação mobile e um design system inicial compartilhado. As duas aplicações renderizam
+demonstrações temporárias da fundação visual; ainda não implementam funcionalidades comerciais.
 
 ## Estado atual
 
@@ -16,7 +16,8 @@ implementam funcionalidades comerciais.
 - Node.js e pnpm fixados para o projeto.
 - TypeScript estrito, ESLint, Prettier e proteção inicial contra segredos configurados.
 - CI básico configurado no GitHub Actions para executar os Quality Gates.
-- `packages/` permanece como placeholder vazio.
+- `packages/design-tokens` fornece tokens semânticos tipados para Web e Mobile.
+- Landing e mobile possuem `Button`, `Text`, `Container` e `Card` específicos da plataforma.
 - Nenhum teste de produto foi criado.
 - Não existem proteção de branch, Supabase ou deploy.
 - Backend, autenticação e banco de dados ainda não existem.
@@ -48,8 +49,9 @@ scripts de ciclo de vida:
 pnpm install --frozen-lockfile --ignore-scripts
 ```
 
-Esse comando restaura os três projetos com manifesto (`RoleBH`, `@rolebh/landing` e
-`@rolebh/mobile`) pelo lockfile único, sem executar scripts de ciclo de vida.
+Esse comando restaura os quatro projetos com manifesto (`RoleBH`, `@rolebh/landing`,
+`@rolebh/mobile` e `@rolebh/design-tokens`) pelo lockfile único, sem executar scripts de ciclo de
+vida.
 
 ## Comandos disponíveis
 
@@ -106,7 +108,7 @@ Para iniciar no AVD Android configurado:
 pnpm android:mobile
 ```
 
-A rota inicial exibe `Rolê BH — Mobile funcionando.`. O bootstrap foi validado no AVD
+A rota inicial exibe a demonstração temporária do design system. O bootstrap foi validado no AVD
 `RoleBH_API_36`, API 36 e `x86_64`, incluindo Fast Refresh. O iPhone físico não foi validado com
 SDK 57 nesta etapa.
 
@@ -119,7 +121,8 @@ RoleBH/
 ├── apps/
 │   ├── landing/               # bootstrap técnico Next.js
 │   └── mobile/                # bootstrap técnico Expo/React Native
-├── packages/                   # placeholder para código compartilhado
+├── packages/
+│   └── design-tokens/          # contrato semântico tipado compartilhado
 ├── docs/                       # documentação operacional
 ├── scripts/
 │   └── check-secrets.mjs       # proteção inicial contra segredos
@@ -159,14 +162,17 @@ deploy ou upload de artefatos. A proteção da branch `main` ainda não está co
 
 - [Quality Gates](docs/QUALITY_GATES.md)
 - [Arquitetura](docs/ARCHITECTURE.md)
+- [Design System](docs/DESIGN_SYSTEM.md)
 - [Segurança](docs/SECURITY.md)
 - [Stack técnica](docs/TECH_STACK.md)
 - [Instruções para agentes](AGENTS.md)
 
 ## Limitações conhecidas
 
-- A landing contém somente o bootstrap técnico; não há conteúdo comercial, formulário ou imagens.
-- O mobile contém somente o bootstrap técnico; não há fluxo de produto, dados ou integração.
+- A landing contém a demonstração temporária do design system; não há conteúdo comercial,
+  formulário ou imagens.
+- O mobile contém a demonstração temporária do design system; não há fluxo de produto, dados ou
+  integração.
 - Não existem testes automatizados de produto; o CI executa somente os gates técnicos existentes.
 - A proteção contra segredos é local, baseada em poucos padrões de alta confiança e não substitui
   um scanner dedicado.

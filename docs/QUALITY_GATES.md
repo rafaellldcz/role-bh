@@ -94,6 +94,10 @@ opções exigidas pelo Next.js, DOM, JSX e alias `@/*`.
 `apps/mobile/tsconfig.json` estende simultaneamente `expo/tsconfig.base` e a base compartilhada da
 raiz. Assim, preserva as opções necessárias ao React Native e as verificações estritas do projeto.
 
+`@rolebh/design-tokens` exporta TypeScript diretamente. Seus contratos são verificados pelos
+typechecks consumidores da landing e do mobile; o build da landing também comprova a resolução do
+pacote interno. Não existe ferramenta de build própria para os tokens.
+
 ### Build da landing
 
 Next.js 16 não executa lint durante `next build`. Por isso lint, typecheck e build são gates

@@ -29,7 +29,7 @@ tecnologias reservadas para etapas futuras.
 | Next.js                | 16.3.1  | App Router, servidor local e build de produção |
 | React                  | 19.2.8  | Renderização da interface                      |
 | React DOM              | 19.2.8  | Integração do React com o DOM                  |
-| Tailwind CSS           | 4.3.3   | Classes utilitárias da página mínima           |
+| Tailwind CSS           | 4.3.3   | Pipeline CSS da demonstração visual da landing |
 | `@tailwindcss/postcss` | 4.3.3   | Integração do Tailwind com PostCSS             |
 | PostCSS                | 8.5.26  | Processamento do CSS                           |
 | ESLint da landing      | 9.39.5  | Execução compatível com os plugins do Next.js  |
@@ -42,12 +42,21 @@ As declarações permanecem no pacote para respeitar o isolamento de dependênci
 
 As versões de dependências são exatas no `package.json` e no `pnpm-lock.yaml`.
 
+### Pacote interno compartilhado
+
+| Pacote                  | Versão | Função atual                                                             |
+| ----------------------- | ------ | ------------------------------------------------------------------------ |
+| `@rolebh/design-tokens` | 0.0.0  | Tokens semânticos TypeScript consumidos diretamente por landing e mobile |
+
+O pacote é privado, não possui dependências externas nem ferramenta de build e não contém React,
+React Native ou Next.js. O vínculo com as aplicações usa `workspace:*`.
+
 ### Mobile instalado
 
 | Tecnologia                       | Versão  | Função atual                                        |
 | -------------------------------- | ------- | --------------------------------------------------- |
 | Expo                             | 57.0.15 | Runtime gerenciado e ferramentas de desenvolvimento |
-| React Native                     | 0.86.2  | Renderização nativa da tela mínima                  |
+| React Native                     | 0.86.2  | Renderização nativa da demonstração visual          |
 | React                            | 19.2.3  | Modelo de componentes do mobile                     |
 | Expo Router                      | 57.0.15 | Roteamento baseado em arquivos sob `src/app`        |
 | `expo-constants`                 | 57.0.13 | Constantes do ambiente Expo                         |
@@ -84,10 +93,11 @@ runtime com ESLint 10; o ESLint `10.8.1` da raiz permanece inalterado.
   scanner dedicado.
 - **Next.js e React:** fornecem somente a rota estática `/` pelo App Router; não há backend ou API
   Route.
-- **Tailwind CSS e PostCSS:** comprovam o pipeline de estilos sem estabelecer identidade visual
-  definitiva.
-- **Expo, React Native e Expo Router:** fornecem somente a rota inicial mobile gerenciada, sem
-  diretórios nativos ou integração de produto.
+- **Tailwind CSS e PostCSS:** processam o CSS da demonstração Web da identidade visual inicial.
+- **Design tokens:** compartilham cores semânticas, tipografia, espaçamento, raios, elevação e
+  interação sem compartilhar componentes entre plataformas.
+- **Expo, React Native e Expo Router:** fornecem a rota inicial mobile gerenciada e sua
+  demonstração visual, sem diretórios nativos ou integração de produto.
 - **Safe Area Context:** mantém o conteúdo dentro das áreas seguras do dispositivo.
 
 ## Ferramentas externas validadas no ambiente

@@ -14,7 +14,8 @@ instruções fornecidas pelo ChatGPT Work definem produto, etapas, escopo e crit
 - Monorepo pnpm com workspaces em `apps/*` e `packages/*`.
 - `apps/landing` contém Next.js com App Router, TypeScript e Tailwind CSS.
 - `apps/mobile` contém Expo SDK 57, React Native, Expo Router e TypeScript.
-- `packages/` contém somente `.gitkeep`.
+- `packages/design-tokens` contém o contrato semântico tipado compartilhado entre as aplicações.
+- Cada aplicação mantém implementações próprias de `Button`, `Text`, `Container` e `Card`.
 - A raiz concentra configurações de TypeScript, ESLint, Prettier e o verificador de segredos.
 - O CI básico executa os gates do repositório no GitHub Actions.
 - Não existem backend, Supabase, testes de produto, proteção de branch ou deploy.
@@ -26,6 +27,7 @@ Leia, nesta ordem:
 3. [Arquitetura](docs/ARCHITECTURE.md)
 4. [Segurança](docs/SECURITY.md)
 5. [Stack técnica](docs/TECH_STACK.md)
+6. [Design System](docs/DESIGN_SYSTEM.md)
 
 ## Ambiente e comandos
 
@@ -90,9 +92,13 @@ Consulte [docs/QUALITY_GATES.md](docs/QUALITY_GATES.md) para o fluxo completo.
 - `.github/workflows/ci.yml`: CI básico dos Quality Gates com permissões somente leitura.
 - `apps/landing/package.json`: dependências e scripts exclusivos da landing.
 - `apps/landing/src/app/`: layout global, estilos Tailwind e rota `/`.
+- `apps/landing/src/components/`: quatro componentes Web da fundação visual.
 - `apps/mobile/package.json`: dependências e scripts exclusivos do mobile.
 - `apps/mobile/src/app/`: layout do Expo Router e rota inicial mobile.
+- `apps/mobile/src/components/`: quatro componentes React Native da fundação visual.
 - `apps/mobile/app.json`: metadados e configurações do Expo.
+- `packages/design-tokens/`: cores, tipografia, espaçamento, raios, elevação e interação
+  compartilhados por contrato, sem implementação visual multiplataforma.
 - `docs/`: arquitetura, segurança, stack e gates vigentes.
 
 ## Regras de execução

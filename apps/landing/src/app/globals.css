@@ -1,9 +1,116 @@
 @import 'tailwindcss';
 
-:root {
-  font-family: Arial, Helvetica, sans-serif;
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #0b0b0b;
 }
 
 body {
   margin: 0;
+}
+
+button,
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.ds-page {
+  min-height: 100vh;
+  padding-block: clamp(32px, 7vw, 80px);
+  background:
+    radial-gradient(
+      circle at 85% 5%,
+      color-mix(in srgb, var(--ds-brand) 13%, transparent),
+      transparent 30%
+    ),
+    var(--ds-background);
+  color: var(--ds-text-primary);
+}
+
+.ds-header {
+  display: grid;
+  max-width: 760px;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.ds-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ds-eyebrow::before {
+  width: 24px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--ds-brand);
+  content: '';
+}
+
+.ds-grid,
+.ds-stack,
+.ds-typography {
+  display: grid;
+}
+
+.ds-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+
+.ds-stack {
+  min-width: 0;
+  gap: 16px;
+}
+
+.ds-typography {
+  gap: 12px;
+}
+
+.ds-divider {
+  height: 1px;
+  margin-block: 8px;
+  border: 0;
+  background: var(--ds-border);
+}
+
+.ds-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.ds-palette {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.ds-swatch {
+  display: grid;
+  min-height: 104px;
+  align-content: space-between;
+  padding: 12px;
+  border: 1px solid var(--ds-border);
+  border-radius: 12px;
+}
+
+@media (min-width: 820px) {
+  .ds-grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .ds-header {
+    margin-bottom: 32px;
+  }
+
+  .ds-actions > button {
+    width: 100%;
+  }
 }

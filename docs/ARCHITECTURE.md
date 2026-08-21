@@ -5,8 +5,8 @@
 O Rolê BH é um monorepo pnpm com uma raiz compartilhada. O arquivo
 `pnpm-workspace.yaml` reconhece projetos diretamente abaixo de `apps/*` e `packages/*` e pode
 registrar políticas reproduzíveis do pnpm.
-`apps/landing` e `apps/mobile` são as aplicações vigentes; `packages/` ainda contém somente
-`.gitkeep`.
+`apps/landing` e `apps/mobile` são as aplicações vigentes; `packages/design-tokens` fornece o
+contrato semântico compartilhado da fundação visual.
 
 ```text
 RoleBH/
@@ -15,6 +15,7 @@ RoleBH/
 ├── apps/
 │   ├── landing/
 │   │   ├── src/app/
+│   │   ├── src/components/
 │   │   ├── eslint.config.mjs
 │   │   ├── next.config.ts
 │   │   ├── package.json
@@ -22,12 +23,14 @@ RoleBH/
 │   │   └── tsconfig.json
 │   └── mobile/
 │       ├── src/app/
+│       ├── src/components/
 │       ├── app.json
 │       ├── eslint.config.mjs
 │       ├── package.json
 │       └── tsconfig.json
 ├── packages/
-│   └── .gitkeep
+│   ├── .gitkeep
+│   └── design-tokens/
 ├── docs/
 ├── scripts/
 │   └── check-secrets.mjs
@@ -91,13 +94,13 @@ aplicação estende o `tsconfig.json` Node da raiz.
 | `apps/mobile/app.json`           | Metadados e plugin do Expo Router, sem scheme definitivo |
 | `apps/mobile/tsconfig.json`      | TypeScript Expo estendendo as duas bases                 |
 | `apps/mobile/eslint.config.mjs`  | Flat Config oficial do Expo com zero warnings            |
-| `packages/`                      | Espaço reservado para código compartilhado, ainda vazio  |
+| `packages/design-tokens/`        | Contrato semântico tipado da fundação visual             |
 
 ## Aplicação landing vigente
 
-A landing usa Next.js com App Router e código sob `src/`. A rota `/` é uma página estática
-mínima, sem API Routes, fontes remotas, backend ou conteúdo comercial. Tailwind CSS é processado
-pelo plugin oficial de PostCSS.
+A landing usa Next.js com App Router e código sob `src/`. A rota `/` demonstra temporariamente a
+fundação visual com quatro componentes Web, sem API Routes, fontes remotas, backend ou conteúdo
+comercial. Tailwind CSS é processado pelo plugin oficial de PostCSS.
 
 Os scripts `dev`, `build`, `start`, `lint` e `typecheck` pertencem ao workspace
 `@rolebh/landing`. A raiz oferece atalhos operacionais para eles e o gate sequencial
@@ -105,8 +108,9 @@ Os scripts `dev`, `build`, `start`, `lint` e `typecheck` pertencem ao workspace
 
 ## Aplicação mobile vigente
 
-O mobile usa Expo SDK 57, React Native e Expo Router com código sob `src/`. A rota inicial é uma
-tela mínima protegida por `SafeAreaView`, sem navegação de produto, dados ou integração externa.
+O mobile usa Expo SDK 57, React Native e Expo Router com código sob `src/`. A rota inicial demonstra
+temporariamente quatro componentes nativos em área segura, sem navegação de produto, dados ou
+integração externa.
 O mobile não define scheme customizado ou definitivo; deep linking de produto permanece fora do
 escopo vigente.
 
@@ -127,15 +131,16 @@ O workflow `CI` transporta essa mesma sequência para um único job `quality` em
 acionado por push em `main`, pull request destinado a `main` ou execução manual. Ele não adiciona
 orquestrador, matriz, testes de produto, deploy ou proteção de branch.
 
-## Direção aprovada — parcialmente implementada
+## Compartilhamento entre plataformas
 
 A direção arquitetural aprovada separa:
 
 - uma aplicação mobile em `apps/mobile`;
-- pacotes reutilizáveis em `packages/*`, somente quando surgir compartilhamento real.
+- contratos independentes de plataforma em `packages/*` quando houver compartilhamento real.
 
-Landing e mobile já existem como bootstraps técnicos. Pacotes compartilhados reais ainda não
-existem.
+Landing e mobile existem como bootstraps técnicos. `@rolebh/design-tokens` é o primeiro pacote
+compartilhado real: exporta TypeScript diretamente, não possui dependências externas nem etapa de
+build e não importa React, React Native ou Next.js.
 
 Código potencialmente compartilhável inclui:
 
@@ -145,8 +150,8 @@ Código potencialmente compartilhável inclui:
 - configurações de qualidade reutilizáveis;
 - clientes ou adaptadores somente quando a fronteira entre plataformas estiver definida.
 
-Componentes visuais, navegação e integrações específicas de web ou mobile devem permanecer na
-aplicação correspondente, salvo decisão arquitetural posterior.
+Componentes visuais permanecem específicos de Web ou Mobile; apenas seus significados e tokens
+são compartilhados. Navegação e integrações também permanecem na aplicação correspondente.
 
 ## Fonte da verdade técnica
 
@@ -158,7 +163,7 @@ O comportamento executável dos arquivos versionados é a fonte primária do est
 - segurança inicial: `.gitignore` e `scripts/check-secrets.mjs`;
 - automação de qualidade: `.github/workflows/ci.yml`;
 - operação: [README.md](../README.md), [Quality Gates](QUALITY_GATES.md),
-  [Segurança](SECURITY.md) e [Stack técnica](TECH_STACK.md).
+  [Segurança](SECURITY.md), [Stack técnica](TECH_STACK.md) e [Design System](DESIGN_SYSTEM.md).
 
 O Plano Mestre e as instruções do ChatGPT Work definem mudanças futuras e escopo. Se a
 documentação divergir do código, reporte a divergência antes de decidir uma mudança estrutural.
@@ -167,8 +172,8 @@ documentação divergir do código, reporte a divergência antes de decidir uma 
 
 Ainda não existem:
 
-- pacote compartilhado real;
-- componentes reutilizáveis, navegação de produto ou rotas além das telas mínimas;
+- componentes além de `Button`, `Text`, `Container` e `Card`, navegação de produto ou rotas de
+  produto;
 - API, backend, autenticação, banco, storage ou Supabase;
 - schema, migrações, Edge Functions ou políticas RLS;
 - testes de produto;

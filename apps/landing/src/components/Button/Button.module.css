@@ -1,0 +1,46 @@
+.button {
+  min-height: var(--button-min-height);
+  min-width: var(--button-min-width);
+  padding: var(--button-padding);
+  border: var(--button-border);
+  border-radius: var(--button-radius);
+  background: var(--button-background);
+  box-shadow: var(--button-shadow);
+  color: var(--button-color);
+  font: inherit;
+  font-size: var(--button-font-size);
+  font-weight: var(--button-font-weight);
+  line-height: var(--button-line-height);
+  cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease,
+    opacity 140ms ease,
+    transform 140ms ease;
+}
+
+@media (hover: hover) {
+  .button:not(:disabled):hover {
+    background: var(--button-hover-background);
+    color: var(--button-hover-color);
+    transform: translateY(var(--button-hover-translate));
+  }
+}
+
+.button:not(:disabled):active {
+  background: var(--button-pressed-background);
+  color: var(--button-pressed-color);
+  transform: scale(var(--button-pressed-scale));
+}
+
+.button:focus-visible {
+  outline: var(--button-focus-width) solid var(--button-focus-color);
+  outline-offset: var(--button-focus-offset);
+}
+
+.button:disabled {
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: var(--button-disabled-opacity);
+}
