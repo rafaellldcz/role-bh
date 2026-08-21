@@ -62,10 +62,18 @@ Limitações relevantes:
   detectados;
 - arquivos grandes, binários ou com extensão excluída não têm conteúdo textual analisado;
 - não há análise de histórico Git, entropia, dependências, infraestrutura ou repositório remoto;
-- não existe execução em CI.
+- o CI executa o verificador vigente, mas não adiciona análise de histórico, entropia ou scanner
+  dedicado.
 
 Portanto, um resultado aprovado significa apenas que nenhum padrão coberto foi encontrado nos
 candidatos analisados.
+
+## Segurança do CI básico
+
+O workflow `CI` declara somente `contents: read`, faz checkout com `persist-credentials: false` e
+não usa secrets. Actions externas são referenciadas por SHA imutável. A instalação mantém
+`--ignore-scripts`, e o job executa o verificador normal e seu self-test sem imprimir os valores
+de teste.
 
 ## Arquivos que não podem ser versionados
 
@@ -119,7 +127,7 @@ Reescrita de histórico, force push ou remoção de recurso remoto exigem autori
 ## Lacunas conhecidas
 
 - Não há scanner dedicado, auditoria de dependências ou monitoramento contínuo.
-- Não há CI, proteção de branch ou secret scanning remoto documentado como gate.
+- Não há proteção de branch, checks obrigatórios ou secret scanning remoto dedicado.
 - Não há aplicação para validação de autenticação, autorização ou tratamento de dados.
 - Não há Supabase nem RLS.
 - O verificador local cobre apenas um conjunto pequeno de assinaturas.

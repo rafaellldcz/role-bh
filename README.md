@@ -15,9 +15,10 @@ implementam funcionalidades comerciais.
 - Aplicação técnica em `apps/mobile`, com Expo SDK 57, React Native e rota inicial do Expo Router.
 - Node.js e pnpm fixados para o projeto.
 - TypeScript estrito, ESLint, Prettier e proteção inicial contra segredos configurados.
+- CI básico configurado no GitHub Actions para executar os Quality Gates.
 - `packages/` permanece como placeholder vazio.
 - Nenhum teste de produto foi criado.
-- Não existem CI, proteção de branch, Supabase ou deploy.
+- Não existem proteção de branch, Supabase ou deploy.
 - Backend, autenticação e banco de dados ainda não existem.
 
 ## Requisitos locais
@@ -113,6 +114,8 @@ SDK 57 nesta etapa.
 
 ```text
 RoleBH/
+├── .github/workflows/
+│   └── ci.yml                   # CI básico dos Quality Gates
 ├── apps/
 │   ├── landing/               # bootstrap técnico Next.js
 │   └── mobile/                # bootstrap técnico Expo/React Native
@@ -143,6 +146,15 @@ responsabilidades estão em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 7. Execute `git diff --check`.
 8. Revise o diff, os arquivos alterados e o estado do Git antes de encerrar.
 
+## CI básico
+
+O workflow `CI` executa em pushes para `main`, pull requests destinados a `main` e acionamento
+manual. O único job, `quality`, usa `ubuntu-latest`, instala o lockfile sem lifecycle scripts e
+executa `pnpm check`, o self-test de segredos e a integridade do diff.
+
+O workflow possui somente `contents: read`, não recebe secrets e não executa testes de produto,
+deploy ou upload de artefatos. A proteção da branch `main` ainda não está configurada.
+
 ## Documentação
 
 - [Quality Gates](docs/QUALITY_GATES.md)
@@ -155,7 +167,7 @@ responsabilidades estão em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 - A landing contém somente o bootstrap técnico; não há conteúdo comercial, formulário ou imagens.
 - O mobile contém somente o bootstrap técnico; não há fluxo de produto, dados ou integração.
-- Não existem testes automatizados de produto nem CI remoto.
+- Não existem testes automatizados de produto; o CI executa somente os gates técnicos existentes.
 - A proteção contra segredos é local, baseada em poucos padrões de alta confiança e não substitui
   um scanner dedicado.
 - O Android foi validado com Expo Go no AVD local; não existem diretórios nativos versionados.

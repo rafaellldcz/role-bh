@@ -10,6 +10,8 @@ registrar políticas reproduzíveis do pnpm.
 
 ```text
 RoleBH/
+├── .github/workflows/
+│   └── ci.yml
 ├── apps/
 │   ├── landing/
 │   │   ├── src/app/
@@ -78,6 +80,7 @@ aplicação estende o `tsconfig.json` Node da raiz.
 | `.prettierrc.json`               | Estilo de formatação                                     |
 | `.prettierignore`                | Saídas e artefatos excluídos do Prettier                 |
 | `.gitignore`                     | Dependências, segredos locais, builds e arquivos locais  |
+| `.github/workflows/ci.yml`       | CI básico dos Quality Gates em runner Linux              |
 | `scripts/check-secrets.mjs`      | Verificação inicial de material sensível                 |
 | `apps/landing/package.json`      | Dependências e scripts internos da aplicação             |
 | `apps/landing/src/app/`          | App Router, layout, estilo global e rota `/`             |
@@ -120,6 +123,10 @@ Turborepo, Nx ou execução paralela. `check:root`, `check:landing` e `check:mob
 fronteiras de cada projeto; `pnpm check` os executa nessa ordem e interrompe no primeiro gate
 falho.
 
+O workflow `CI` transporta essa mesma sequência para um único job `quality` em `ubuntu-latest`,
+acionado por push em `main`, pull request destinado a `main` ou execução manual. Ele não adiciona
+orquestrador, matriz, testes de produto, deploy ou proteção de branch.
+
 ## Direção aprovada — parcialmente implementada
 
 A direção arquitetural aprovada separa:
@@ -149,6 +156,7 @@ O comportamento executável dos arquivos versionados é a fonte primária do est
 - compilação: arquivos `tsconfig`;
 - lint e formatação: configurações de ESLint e Prettier;
 - segurança inicial: `.gitignore` e `scripts/check-secrets.mjs`;
+- automação de qualidade: `.github/workflows/ci.yml`;
 - operação: [README.md](../README.md), [Quality Gates](QUALITY_GATES.md),
   [Segurança](SECURITY.md) e [Stack técnica](TECH_STACK.md).
 
@@ -164,7 +172,7 @@ Ainda não existem:
 - API, backend, autenticação, banco, storage ou Supabase;
 - schema, migrações, Edge Functions ou políticas RLS;
 - testes de produto;
-- CI, workflows, proteção de branch ou deploy;
+- proteção de branch ou deploy;
 - diretórios nativos Android/iOS pertencentes ao produto.
 
 O Android SDK, o AVD e o Expo Go usados na validação pertencem ao ambiente local, não à

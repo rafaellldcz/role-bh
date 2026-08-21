@@ -148,6 +148,24 @@ dentro do escopo e execute novamente o comando completo.
 Os aliases da raiz delegam aos scripts existentes dos workspaces por `pnpm --filter`; não
 duplicam implementações internas nas aplicações.
 
+## CI básico
+
+O workflow `.github/workflows/ci.yml`, chamado `CI`, executa em push para `main`, pull request
+destinado a `main` e `workflow_dispatch`. Seu único job `quality` usa `ubuntu-latest`, timeout de
+30 minutos e executa, nesta ordem:
+
+1. checkout sem persistir credenciais;
+2. configuração fixada do pnpm `11.22.0` e Node.js `24.19.0` com cache;
+3. exibição das versões;
+4. frozen install sem lifecycle scripts;
+5. `pnpm check`;
+6. self-test do verificador de segredos;
+7. `git diff --check` e `git diff --exit-code`.
+
+Esse CI não implementa testes de produto. O workflow possui somente `contents: read`, não usa
+secrets, matriz, deploy ou artefatos. A proteção da branch `main` e checks obrigatórios remotos
+ainda não estão configurados. A execução real será comprovada somente após commit e push.
+
 ## Alteração dos próprios gates
 
 Mudanças em `package.json`, configurações, ignores, lockfile ou no verificador de segredos exigem
@@ -185,6 +203,6 @@ Não existem atualmente:
 - Playwright, Maestro ou testes de carga;
 - auditoria dedicada de dependências;
 - scanner avançado de segredos;
-- CI do GitHub Actions ou checks obrigatórios remotos.
+- checks obrigatórios remotos e proteção de branch.
 
 Esses itens só se tornam gates após implementação e aprovação em etapa própria.

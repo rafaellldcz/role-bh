@@ -16,7 +16,8 @@ instruções fornecidas pelo ChatGPT Work definem produto, etapas, escopo e crit
 - `apps/mobile` contém Expo SDK 57, React Native, Expo Router e TypeScript.
 - `packages/` contém somente `.gitkeep`.
 - A raiz concentra configurações de TypeScript, ESLint, Prettier e o verificador de segredos.
-- Não existem backend, Supabase, CI, testes de produto ou deploy.
+- O CI básico executa os gates do repositório no GitHub Actions.
+- Não existem backend, Supabase, testes de produto, proteção de branch ou deploy.
 
 Leia, nesta ordem:
 
@@ -71,6 +72,10 @@ git diff --check
 formatação, lint, typecheck, segredos, lint/typecheck/build da landing e lint/typecheck/matriz
 Expo/Expo Doctor do mobile.
 
+O workflow `CI` repete esses gates em `ubuntu-latest` para pushes em `main`, pull requests
+destinados a `main` e execuções manuais. Ele possui somente `contents: read`, não usa secrets e
+não implementa testes de produto, deploy ou proteção de branch.
+
 Consulte [docs/QUALITY_GATES.md](docs/QUALITY_GATES.md) para o fluxo completo.
 
 ## Responsabilidades principais
@@ -82,6 +87,7 @@ Consulte [docs/QUALITY_GATES.md](docs/QUALITY_GATES.md) para o fluxo completo.
 - `eslint.config.mjs`: análise estática com zero warnings.
 - `.prettierrc.json` e `.prettierignore`: formatação.
 - `.gitignore` e `scripts/check-secrets.mjs`: proteção inicial contra material sensível.
+- `.github/workflows/ci.yml`: CI básico dos Quality Gates com permissões somente leitura.
 - `apps/landing/package.json`: dependências e scripts exclusivos da landing.
 - `apps/landing/src/app/`: layout global, estilos Tailwind e rota `/`.
 - `apps/mobile/package.json`: dependências e scripts exclusivos do mobile.

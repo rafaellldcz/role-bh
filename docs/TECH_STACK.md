@@ -19,6 +19,7 @@ tecnologias reservadas para etapas futuras.
 | `eslint-config-prettier` | 10.1.8  | Evita conflito entre regras de ESLint e Prettier           |
 | Git                      | —       | Histórico e controle de versão                             |
 | GitHub                   | —       | Repositório remoto privado                                 |
+| GitHub Actions           | —       | CI básico dos Quality Gates em `ubuntu-latest`             |
 | Verificador de segredos  | local   | Varredura inicial baseada em padrões, implementada em Node |
 
 ### Landing instalada
@@ -77,6 +78,8 @@ runtime com ESLint 10; o ESLint `10.8.1` da raiz permanece inalterado.
 - **ESLint:** detecta problemas estáticos; warnings são proibidos.
 - **Prettier:** formata arquivos separadamente do lint.
 - **Git e GitHub:** mantêm o histórico local e seu espelho privado em `origin/main`.
+- **GitHub Actions:** executa os gates técnicos em push, pull request e acionamento manual, sem
+  testes de produto ou deploy.
 - **Verificador de segredos:** reduz o risco de versionar alguns formatos sensíveis, sem substituir
   scanner dedicado.
 - **Next.js e React:** fornecem somente a rota estática `/` pelo App Router; não há backend ou API
@@ -123,7 +126,7 @@ definida neste repositório:
 | Área            | Tecnologias planejadas                          |
 | --------------- | ----------------------------------------------- |
 | Backend e dados | Supabase, autenticação, banco, storage e RLS    |
-| Automação       | GitHub Actions e proteção da branch principal   |
+| Automação       | Proteção da branch principal                    |
 | Testes          | Testes unitários, integração, E2E web e Maestro |
 | Entrega         | Deploy da landing, EAS Build e builds mobile    |
 
