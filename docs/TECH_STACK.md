@@ -45,12 +45,12 @@ As versões de dependências são exatas no `package.json` e no `pnpm-lock.yaml`
 
 | Tecnologia                       | Versão  | Função atual                                        |
 | -------------------------------- | ------- | --------------------------------------------------- |
-| Expo                             | 57.0.14 | Runtime gerenciado e ferramentas de desenvolvimento |
+| Expo                             | 57.0.15 | Runtime gerenciado e ferramentas de desenvolvimento |
 | React Native                     | 0.86.2  | Renderização nativa da tela mínima                  |
 | React                            | 19.2.3  | Modelo de componentes do mobile                     |
-| Expo Router                      | 57.0.14 | Roteamento baseado em arquivos sob `src/app`        |
-| `expo-constants`                 | 57.0.12 | Constantes do ambiente Expo                         |
-| `expo-linking`                   | 57.0.6  | Integração de URLs usada pelo roteamento            |
+| Expo Router                      | 57.0.15 | Roteamento baseado em arquivos sob `src/app`        |
+| `expo-constants`                 | 57.0.13 | Constantes do ambiente Expo                         |
+| `expo-linking`                   | 57.0.7  | Integração de URLs usada pelo roteamento            |
 | `expo-status-bar`                | 57.0.1  | Configuração da barra de status                     |
 | `react-native-safe-area-context` | 5.7.0   | Respeito às áreas seguras da tela                   |
 | `react-native-screens`           | 4.26.0  | Infraestrutura nativa de telas do Router            |

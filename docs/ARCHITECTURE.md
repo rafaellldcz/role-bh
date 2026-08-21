@@ -3,7 +3,8 @@
 ## Estado vigente
 
 O Rolê BH é um monorepo pnpm com uma raiz compartilhada. O arquivo
-`pnpm-workspace.yaml` reconhece projetos diretamente abaixo de `apps/*` e `packages/*`.
+`pnpm-workspace.yaml` reconhece projetos diretamente abaixo de `apps/*` e `packages/*` e pode
+registrar políticas reproduzíveis do pnpm.
 `apps/landing` e `apps/mobile` são as aplicações vigentes; `packages/` ainda contém somente
 `.gitkeep`.
 
@@ -66,28 +67,28 @@ aplicação estende o `tsconfig.json` Node da raiz.
 
 ## Responsabilidades da raiz
 
-| Arquivo ou diretório             | Responsabilidade vigente                                |
-| -------------------------------- | ------------------------------------------------------- |
-| `package.json`                   | Metadados, versões, scripts e dependências da fundação  |
-| `pnpm-lock.yaml`                 | Resolução reproduzível das dependências atuais          |
-| `pnpm-workspace.yaml`            | Descoberta de aplicações e pacotes de primeiro nível    |
-| `tsconfig.base.json`             | Regras TypeScript compartilháveis                       |
-| `tsconfig.json`                  | Typecheck das ferramentas Node da raiz                  |
-| `eslint.config.mjs`              | ESLint Flat Config para JavaScript e TypeScript         |
-| `.prettierrc.json`               | Estilo de formatação                                    |
-| `.prettierignore`                | Saídas e artefatos excluídos do Prettier                |
-| `.gitignore`                     | Dependências, segredos locais, builds e arquivos locais |
-| `scripts/check-secrets.mjs`      | Verificação inicial de material sensível                |
-| `apps/landing/package.json`      | Dependências e scripts internos da aplicação            |
-| `apps/landing/src/app/`          | App Router, layout, estilo global e rota `/`            |
-| `apps/landing/tsconfig.json`     | TypeScript web estendendo a base compartilhada          |
-| `apps/landing/eslint.config.mjs` | Regras oficiais Next.js, React e TypeScript             |
-| `apps/mobile/package.json`       | Expo, React Native, Expo Router e scripts internos      |
-| `apps/mobile/src/app/`           | Layout e rota inicial pelo Expo Router                  |
-| `apps/mobile/app.json`           | Metadados, scheme e plugin do Expo Router               |
-| `apps/mobile/tsconfig.json`      | TypeScript Expo estendendo as duas bases                |
-| `apps/mobile/eslint.config.mjs`  | Flat Config oficial do Expo com zero warnings           |
-| `packages/`                      | Espaço reservado para código compartilhado, ainda vazio |
+| Arquivo ou diretório             | Responsabilidade vigente                                 |
+| -------------------------------- | -------------------------------------------------------- |
+| `package.json`                   | Metadados, versões, scripts agregados e dependências     |
+| `pnpm-lock.yaml`                 | Resolução reproduzível das dependências atuais           |
+| `pnpm-workspace.yaml`            | Descoberta dos workspaces e políticas reproduzíveis pnpm |
+| `tsconfig.base.json`             | Regras TypeScript compartilháveis                        |
+| `tsconfig.json`                  | Typecheck das ferramentas Node da raiz                   |
+| `eslint.config.mjs`              | ESLint Flat Config para JavaScript e TypeScript          |
+| `.prettierrc.json`               | Estilo de formatação                                     |
+| `.prettierignore`                | Saídas e artefatos excluídos do Prettier                 |
+| `.gitignore`                     | Dependências, segredos locais, builds e arquivos locais  |
+| `scripts/check-secrets.mjs`      | Verificação inicial de material sensível                 |
+| `apps/landing/package.json`      | Dependências e scripts internos da aplicação             |
+| `apps/landing/src/app/`          | App Router, layout, estilo global e rota `/`             |
+| `apps/landing/tsconfig.json`     | TypeScript web estendendo a base compartilhada           |
+| `apps/landing/eslint.config.mjs` | Regras oficiais Next.js, React e TypeScript              |
+| `apps/mobile/package.json`       | Expo, React Native, Expo Router e scripts internos       |
+| `apps/mobile/src/app/`           | Layout e rota inicial pelo Expo Router                   |
+| `apps/mobile/app.json`           | Metadados e plugin do Expo Router, sem scheme definitivo |
+| `apps/mobile/tsconfig.json`      | TypeScript Expo estendendo as duas bases                 |
+| `apps/mobile/eslint.config.mjs`  | Flat Config oficial do Expo com zero warnings            |
+| `packages/`                      | Espaço reservado para código compartilhado, ainda vazio  |
 
 ## Aplicação landing vigente
 
@@ -96,17 +97,28 @@ mínima, sem API Routes, fontes remotas, backend ou conteúdo comercial. Tailwin
 pelo plugin oficial de PostCSS.
 
 Os scripts `dev`, `build`, `start`, `lint` e `typecheck` pertencem ao workspace
-`@rolebh/landing`. Atalhos agregados na raiz ainda não existem.
+`@rolebh/landing`. A raiz oferece atalhos operacionais para eles e o gate sequencial
+`check:landing`.
 
 ## Aplicação mobile vigente
 
 O mobile usa Expo SDK 57, React Native e Expo Router com código sob `src/`. A rota inicial é uma
 tela mínima protegida por `SafeAreaView`, sem navegação de produto, dados ou integração externa.
-O `scheme` `rolebh` atende ao requisito de linking em builds futuros.
+O mobile não define scheme customizado ou definitivo; deep linking de produto permanece fora do
+escopo vigente.
 
 Os scripts `start`, `android`, `lint` e `typecheck` pertencem ao workspace `@rolebh/mobile`.
 Autolinking e Metro usam o suporte nativo a monorepos do Expo; não há configuração Metro própria.
-Também não existem diretórios `android/` ou `ios/`, prebuild, EAS ou Development Build.
+Atalhos na raiz adicionam validação da matriz Expo, Expo Doctor e o gate sequencial
+`check:mobile`. Também não existem diretórios `android/` ou `ios/`, prebuild, EAS ou Development
+Build.
+
+## Orquestração operacional da raiz
+
+O `package.json` da raiz delega execução e validação aos workspaces por `pnpm --filter`, sem
+Turborepo, Nx ou execução paralela. `check:root`, `check:landing` e `check:mobile` preservam as
+fronteiras de cada projeto; `pnpm check` os executa nessa ordem e interrompe no primeiro gate
+falho.
 
 ## Direção aprovada — parcialmente implementada
 

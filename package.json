@@ -4,13 +4,27 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "dev:landing": "pnpm --filter @rolebh/landing dev",
+    "build:landing": "pnpm --filter @rolebh/landing build",
+    "start:landing": "pnpm --filter @rolebh/landing start",
+    "start:mobile": "pnpm --filter @rolebh/mobile start",
+    "android:mobile": "pnpm --filter @rolebh/mobile android",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --fix --max-warnings=0",
+    "lint:landing": "pnpm --filter @rolebh/landing lint",
+    "typecheck:landing": "pnpm --filter @rolebh/landing typecheck",
+    "lint:mobile": "pnpm --filter @rolebh/mobile lint",
+    "typecheck:mobile": "pnpm --filter @rolebh/mobile typecheck",
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "check:secrets": "node scripts/check-secrets.mjs",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm check:secrets"
+    "check:expo": "pnpm --filter @rolebh/mobile exec expo install --check",
+    "doctor:mobile": "pnpm --filter @rolebh/mobile exec pnpm dlx expo-doctor@1.20.2 .",
+    "check:root": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm check:secrets",
+    "check:landing": "pnpm lint:landing && pnpm typecheck:landing && pnpm build:landing",
+    "check:mobile": "pnpm lint:mobile && pnpm typecheck:mobile && pnpm check:expo && pnpm doctor:mobile",
+    "check": "pnpm check:root && pnpm check:landing && pnpm check:mobile"
   },
   "packageManager": "pnpm@11.22.0",
   "engines": {

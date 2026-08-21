@@ -33,11 +33,18 @@ entre no projeto com `cd C:\ProjetosPessoais\RoleBH`; a integração do `fnm` de
 
 Comandos existentes no `package.json`:
 
-- Validação: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`,
-  `pnpm check:secrets` e `pnpm check`.
+- Execução: `pnpm dev:landing`, `pnpm build:landing`, `pnpm start:landing`,
+  `pnpm start:mobile` e `pnpm android:mobile`.
+- Validação por aplicação: `pnpm lint:landing`, `pnpm typecheck:landing`,
+  `pnpm lint:mobile`, `pnpm typecheck:mobile`, `pnpm check:expo` e `pnpm doctor:mobile`.
+- Gates agregados: `pnpm check:root`, `pnpm check:landing`, `pnpm check:mobile` e
+  `pnpm check`.
 - Modificação: `pnpm format` e `pnpm lint:fix`.
 
-Scripts internos da landing:
+Os atalhos da raiz delegam aos scripts internos dos workspaces por `pnpm --filter`. Não duplique
+esses comandos nas aplicações.
+
+Scripts internos equivalentes da landing:
 
 - `pnpm --filter @rolebh/landing dev`
 - `pnpm --filter @rolebh/landing build`
@@ -45,7 +52,7 @@ Scripts internos da landing:
 - `pnpm --filter @rolebh/landing lint`
 - `pnpm --filter @rolebh/landing typecheck`
 
-Scripts internos do mobile:
+Scripts internos equivalentes do mobile:
 
 - `pnpm --filter @rolebh/mobile start`
 - `pnpm --filter @rolebh/mobile android`
@@ -60,8 +67,9 @@ pnpm check
 git diff --check
 ```
 
-Para mudanças na landing, acrescente lint, typecheck e build de `@rolebh/landing`. Para mudanças
-no mobile, acrescente lint, typecheck, `expo install --check` e Expo Doctor de `@rolebh/mobile`.
+`pnpm check` executa sequencialmente `check:root`, `check:landing` e `check:mobile`. Isso inclui
+formatação, lint, typecheck, segredos, lint/typecheck/build da landing e lint/typecheck/matriz
+Expo/Expo Doctor do mobile.
 
 Consulte [docs/QUALITY_GATES.md](docs/QUALITY_GATES.md) para o fluxo completo.
 

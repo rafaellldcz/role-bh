@@ -10,12 +10,15 @@ resultado verde.
 
 | Gate                 | Comando                                                  | Escopo e critério                                        |
 | -------------------- | -------------------------------------------------------- | -------------------------------------------------------- |
-| Frozen install       | `pnpm install --frozen-lockfile --ignore-scripts`        | Lockfile compatível, sem atualização ou lifecycle script |
+| Frozen install       | `pnpm install --frozen-lockfile --ignore-scripts`        | Lockfile e políticas pnpm vigentes, sem lifecycle script |
 | Formatação           | `pnpm format:check`                                      | Prettier não encontra arquivos fora do padrão            |
 | Lint                 | `pnpm lint`                                              | ESLint aprova com zero warnings                          |
 | Typecheck            | `pnpm typecheck`                                         | TypeScript aprova as ferramentas Node da raiz            |
 | Segredos             | `pnpm check:secrets`                                     | Nenhum indício coberto pelo verificador é encontrado     |
-| Gate agregado        | `pnpm check`                                             | Executa formatação, lint, typecheck e segredos           |
+| Gate da raiz         | `pnpm check:root`                                        | Executa formatação, lint, typecheck e segredos           |
+| Gate da landing      | `pnpm check:landing`                                     | Executa lint, typecheck e build da landing               |
+| Gate do mobile       | `pnpm check:mobile`                                      | Executa lint, typecheck, versões Expo e Expo Doctor      |
+| Gate completo        | `pnpm check`                                             | Executa raiz, landing e mobile sequencialmente           |
 | Lint da landing      | `pnpm --filter @rolebh/landing lint`                     | Regras Next.js aprovam com zero warnings                 |
 | Typecheck da landing | `pnpm --filter @rolebh/landing typecheck`                | TypeScript web aprova sem emissão                        |
 | Build da landing     | `pnpm --filter @rolebh/landing build`                    | Build de produção e rota estática são gerados            |
@@ -25,8 +28,9 @@ resultado verde.
 | Expo Doctor          | `pnpm dlx expo-doctor@1.20.2 .` em `apps/mobile`         | Diagnóstico oficial fixado aprova o projeto              |
 | Integridade do diff  | `git diff --check`                                       | Nenhum erro de whitespace no diff                        |
 
-O frozen install é necessário ao restaurar ou validar dependências, mas não faz parte de
-`pnpm check`. `git diff --check` também deve ser executado separadamente.
+O frozen install valida o lockfile e as políticas vigentes do pnpm ao restaurar ou validar
+dependências, mas não faz parte de `pnpm check`. `git diff --check` e o self-test de segredos
+também devem ser executados separadamente.
 
 ## Verificação e modificação
 
@@ -36,6 +40,9 @@ Estes comandos são somente leitura:
 - `pnpm lint`
 - `pnpm typecheck`
 - `pnpm check:secrets`
+- `pnpm check:root`
+- `pnpm check:landing`
+- `pnpm check:mobile`
 - `pnpm check`
 - `pnpm --filter @rolebh/landing lint`
 - `pnpm --filter @rolebh/landing typecheck`
@@ -116,16 +123,9 @@ Ele complementa o gate normal, mas não é executado por `pnpm check`.
 
 1. Confirme Node `24.19.0` e pnpm `11.22.0`.
 2. Execute o frozen install se dependências precisaram ser restauradas ou validadas.
-3. Execute os gates do workspace alterado, os gates agregados e a integridade do diff. Para o
-   mobile:
+3. Execute o gate completo, o self-test do verificador e a integridade do diff:
 
 ```powershell
-pnpm --filter @rolebh/mobile lint
-pnpm --filter @rolebh/mobile typecheck
-pnpm --filter @rolebh/mobile exec expo install --check
-cd apps/mobile
-pnpm dlx expo-doctor@1.20.2 .
-cd ../..
 pnpm check
 pnpm check:secrets -- --self-test
 git diff --check
@@ -136,6 +136,17 @@ git diff --check
 
 Um `pnpm check` interrompido no primeiro erro não comprova os gates posteriores. Corrija a causa
 dentro do escopo e execute novamente o comando completo.
+
+### Composição sequencial
+
+`pnpm check` não usa paralelismo:
+
+1. `check:root`: formatação, lint da raiz, typecheck da raiz e segredos;
+2. `check:landing`: lint, typecheck e build da landing;
+3. `check:mobile`: lint, typecheck, `expo install --check` e Expo Doctor `1.20.2`.
+
+Os aliases da raiz delegam aos scripts existentes dos workspaces por `pnpm --filter`; não
+duplicam implementações internas nas aplicações.
 
 ## Alteração dos próprios gates
 

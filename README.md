@@ -52,52 +52,57 @@ Esse comando restaura os três projetos com manifesto (`RoleBH`, `@rolebh/landin
 
 ## Comandos disponíveis
 
-| Comando              | Tipo        | Finalidade                                   |
-| -------------------- | ----------- | -------------------------------------------- |
-| `pnpm format`        | Modificador | Formata arquivos com Prettier.               |
-| `pnpm format:check`  | Validação   | Verifica a formatação sem alterar arquivos.  |
-| `pnpm lint`          | Validação   | Executa o ESLint sem permitir warnings.      |
-| `pnpm lint:fix`      | Modificador | Aplica correções oferecidas pelo ESLint.     |
-| `pnpm typecheck`     | Validação   | Valida as ferramentas Node da raiz.          |
-| `pnpm check:secrets` | Validação   | Procura indícios de segredos nos candidatos. |
-| `pnpm check`         | Validação   | Executa os quatro gates locais agregados.    |
+| Comando              | Tipo        | Finalidade                                             |
+| -------------------- | ----------- | ------------------------------------------------------ |
+| `pnpm format`        | Modificador | Formata arquivos com Prettier.                         |
+| `pnpm format:check`  | Validação   | Verifica a formatação sem alterar arquivos.            |
+| `pnpm lint`          | Validação   | Executa o ESLint da raiz sem permitir warnings.        |
+| `pnpm lint:fix`      | Modificador | Aplica correções oferecidas pelo ESLint.               |
+| `pnpm typecheck`     | Validação   | Valida as ferramentas Node da raiz.                    |
+| `pnpm check:secrets` | Validação   | Procura indícios de segredos nos candidatos.           |
+| `pnpm check:root`    | Validação   | Executa formatação, lint, typecheck e segredos.        |
+| `pnpm check:landing` | Validação   | Executa lint, typecheck e build da landing.            |
+| `pnpm check:mobile`  | Validação   | Executa lint, typecheck e diagnósticos Expo do mobile. |
+| `pnpm check`         | Validação   | Executa raiz, landing e mobile sequencialmente.        |
 
 Os comandos modificadores devem ser usados somente dentro do escopo autorizado. Veja a composição
 dos gates e suas limitações em [docs/QUALITY_GATES.md](docs/QUALITY_GATES.md).
 
 ### Landing
 
-| Comando                                   | Finalidade                           |
-| ----------------------------------------- | ------------------------------------ |
-| `pnpm --filter @rolebh/landing dev`       | Inicia o servidor de desenvolvimento |
-| `pnpm --filter @rolebh/landing build`     | Cria o build de produção             |
-| `pnpm --filter @rolebh/landing start`     | Executa um build já criado           |
-| `pnpm --filter @rolebh/landing lint`      | Executa o ESLint com zero warnings   |
-| `pnpm --filter @rolebh/landing typecheck` | Executa TypeScript sem emissão       |
+| Atalho da raiz           | Comando delegado                          | Finalidade                           |
+| ------------------------ | ----------------------------------------- | ------------------------------------ |
+| `pnpm dev:landing`       | `pnpm --filter @rolebh/landing dev`       | Inicia o servidor de desenvolvimento |
+| `pnpm build:landing`     | `pnpm --filter @rolebh/landing build`     | Cria o build de produção             |
+| `pnpm start:landing`     | `pnpm --filter @rolebh/landing start`     | Executa um build já criado           |
+| `pnpm lint:landing`      | `pnpm --filter @rolebh/landing lint`      | Executa o ESLint com zero warnings   |
+| `pnpm typecheck:landing` | `pnpm --filter @rolebh/landing typecheck` | Executa TypeScript sem emissão       |
+| `pnpm check:landing`     | lint, typecheck e build em sequência      | Valida toda a landing                |
 
 Para executar localmente:
 
 ```powershell
-pnpm --filter @rolebh/landing dev
+pnpm dev:landing
 ```
 
-Abra `http://localhost:3000`. Não existe atalho na raiz para esse comando.
+Abra `http://localhost:3000`.
 
 ### Mobile
 
-| Comando                                                  | Finalidade                                |
-| -------------------------------------------------------- | ----------------------------------------- |
-| `pnpm --filter @rolebh/mobile start`                     | Inicia o servidor de desenvolvimento Expo |
-| `pnpm --filter @rolebh/mobile android`                   | Abre o projeto no Android                 |
-| `pnpm --filter @rolebh/mobile lint`                      | Executa o ESLint com zero warnings        |
-| `pnpm --filter @rolebh/mobile typecheck`                 | Executa TypeScript sem emissão            |
-| `pnpm --filter @rolebh/mobile exec expo install --check` | Valida versões compatíveis com o Expo     |
-| `pnpm dlx expo-doctor@1.20.2 .` em `apps/mobile`         | Executa o diagnóstico oficial fixado      |
+| Atalho da raiz          | Comando delegado                                   | Finalidade                                |
+| ----------------------- | -------------------------------------------------- | ----------------------------------------- |
+| `pnpm start:mobile`     | `pnpm --filter @rolebh/mobile start`               | Inicia o servidor de desenvolvimento Expo |
+| `pnpm android:mobile`   | `pnpm --filter @rolebh/mobile android`             | Abre o projeto no Android                 |
+| `pnpm lint:mobile`      | `pnpm --filter @rolebh/mobile lint`                | Executa o ESLint com zero warnings        |
+| `pnpm typecheck:mobile` | `pnpm --filter @rolebh/mobile typecheck`           | Executa TypeScript sem emissão            |
+| `pnpm check:expo`       | `expo install --check` filtrado para o mobile      | Valida versões compatíveis com o Expo     |
+| `pnpm doctor:mobile`    | Expo Doctor `1.20.2` executado em `apps/mobile`    | Executa o diagnóstico oficial fixado      |
+| `pnpm check:mobile`     | lint, typecheck, matriz Expo e Doctor em sequência | Valida todo o mobile                      |
 
 Para iniciar no AVD Android configurado:
 
 ```powershell
-pnpm --filter @rolebh/mobile android
+pnpm android:mobile
 ```
 
 A rota inicial exibe `Rolê BH — Mobile funcionando.`. O bootstrap foi validado no AVD
@@ -134,10 +139,9 @@ responsabilidades estão em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 3. Execute o frozen install quando precisar restaurar dependências.
 4. Faça apenas a alteração autorizada.
 5. Use comandos modificadores somente sobre arquivos no escopo.
-6. Execute os gates específicos do workspace alterado.
-7. No mobile, execute lint, typecheck, `expo install --check` e Expo Doctor.
-8. Execute `pnpm check` e `git diff --check`.
-9. Revise o diff, os arquivos alterados e o estado do Git antes de encerrar.
+6. Execute `pnpm check`, que valida raiz, landing e mobile sequencialmente.
+7. Execute `git diff --check`.
+8. Revise o diff, os arquivos alterados e o estado do Git antes de encerrar.
 
 ## Documentação
 

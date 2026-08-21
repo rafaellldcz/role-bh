@@ -11,6 +11,13 @@ O repositório privado possui uma defesa inicial contra versionamento acidental 
 
 Essa base reduz erros comuns, mas não constitui auditoria ou scanner de segurança completo.
 
+## Política de idade mínima das dependências
+
+O pnpm 11 aplica uma idade mínima de publicação às dependências. Versões recém-publicadas
+necessárias para compatibilidade podem gerar exclusões exatas, sempre limitadas a pacote e versão
+em `pnpm-workspace.yaml`; exclusões amplas não são permitidas. Lifecycle scripts continuam
+desabilitados durante instalações por meio de `--ignore-scripts`.
+
 ## Política de secrets
 
 - Segredos nunca devem ser gravados em código, documentação, fixtures, logs, commits ou URLs.
